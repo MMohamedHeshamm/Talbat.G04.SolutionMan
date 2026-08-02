@@ -1,6 +1,9 @@
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Talabat.Core.Repoisitories.Contract;
+using Talabat.Repoistory;
 using Talabat.Repoistory.Data;
 
 namespace Talbat.APIs
@@ -11,7 +14,7 @@ namespace Talbat.APIs
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
+            
 
             #region Configure Services
 
@@ -22,6 +25,9 @@ namespace Talbat.APIs
             builder.Services.AddDbContext<StoreContext>
                 (options => options.UseSqlServer
                 (builder.Configuration.GetConnectionString("Defo")));
+
+
+            builder.Services.AddScoped(typeof(IGenericRepostiry<>), typeof(GenericRepo<>));
 
             #endregion
 

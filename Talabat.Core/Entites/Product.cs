@@ -13,7 +13,7 @@ namespace Talabat.Core.Entites
 
         public string PictureUrl { get; set; }
 
-        public decimal Pricee { get; set; }
+        public decimal Price { get; set; }
 
 
         public int BrandId { get; set; }  // FK 

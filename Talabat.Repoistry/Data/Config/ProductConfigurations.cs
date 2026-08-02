@@ -22,7 +22,7 @@ namespace Talabat.Repoistory.Data.Config
                 .IsRequired();
 
 
-            builder.Property(p => p.Pricee).
+            builder.Property(p => p.Price).
                 HasColumnType("decimal(18,2)");
 
             builder.HasOne(p => p.Brand).WithMany().HasForeignKey(p => p.BrandId);

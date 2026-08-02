@@ -8,20 +8,21 @@ namespace Talabat.Repoistory.Data
 {
     public static class StoreContextSeed
     {
-
+        //Extension Method to Seed the Database with Initial Data
         public async static Task SeedAsync(StoreContext _dbContext)
         {
             if(!_dbContext.ProductBrands.Any())
             {
-                var brandData = File.ReadAllText("C:\\Users\\moham\\source\\repos\\Talbat.G04.Solution\\Talabat.Repoistry\\Data\\DataSeed\\brands.json");
+                var brandData = File.ReadAllText("C:\\Users\\mohamed.eldesouky\\source\\repos\\Talbat.G04.SolutionNew\\Talabat.Repoistry\\Data\\DataSeed\\brands.json");
                 var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandData);
 
+                // if file have data 
                 if (brands?.Count() > 0)
                 {
 
                     foreach (var brand in brands)
                     {
-                        _dbContext.Set<ProductBrand>().Add(brand);
+                        _dbContext.Set<ProductBrand>().Add  (brand);
                     }
 
                     await _dbContext.SaveChangesAsync();
@@ -33,7 +34,7 @@ namespace Talabat.Repoistory.Data
 
             if (!_dbContext.ProductCategories.Any())
             {
-                var CategoryData = File.ReadAllText("../Talabat.Repoistry\\Data\\DataSeed\\categories.json");
+                var CategoryData = File.ReadAllText("C:\\Users\\mohamed.eldesouky\\source\\repos\\Talbat.G04.SolutionNew\\Talabat.Repoistry\\Data\\DataSeed\\categories.json");
                 var categories = JsonSerializer.Deserialize<List<ProductCategory>>(CategoryData);
 
                 if (categories?.Count() > 0)
@@ -56,7 +57,7 @@ namespace Talabat.Repoistory.Data
 
             if (!_dbContext.Products.Any())
             {
-                var ProductData = File.ReadAllText("../Talabat.Repoistry\\Data\\DataSeed\\products.json");
+                var ProductData = File.ReadAllText("C:\\Users\\mohamed.eldesouky\\source\\repos\\Talbat.G04.SolutionNew\\Talabat.Repoistry\\Data\\DataSeed\\products.json");
                 var Products = JsonSerializer.Deserialize<List<Product>>(ProductData);
 
                 if (Products?.Count() > 0)
