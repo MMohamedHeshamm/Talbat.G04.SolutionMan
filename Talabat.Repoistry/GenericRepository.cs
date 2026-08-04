@@ -6,6 +6,7 @@ using Talabat.Core.Repoisitories.Contract;
 using Talabat.Repoistory.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Talabat.Core.Specifications;
 
 namespace Talabat.Repoistory
 {
@@ -21,6 +22,7 @@ namespace Talabat.Repoistory
 
 
         // normal function to get all data from the database return iEnumerable of T
+        #region WithOut Spec
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             if (typeof(T) == typeof(Product))
@@ -36,6 +38,24 @@ namespace Talabat.Repoistory
                 return await _dbContext.Products.Where(p => p.Id == id).Include(b => b.Brand).Include(c => c.Category).FirstOrDefaultAsync() as T;
 
             return await _dbContext.Set<T>().FindAsync(id);
+        }
+        #endregion
+
+        public async Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecification<T> Spec)
+        {
+            return await ApplySpecification(Spec).ToListAsync();
+        }
+
+
+        public async Task<T> GetByIdWithSpecAsync(int id, ISpecification<T> Spec)
+        {
+            return await ApplySpecification(Spec).FirstOrDefaultAsync();
+        }
+
+
+        private IQueryable<T> ApplySpecification(ISpecification<T> Spec)
+        {
+            return SpecificationEvalutor<T>.GetQuery(_dbContext.Set<T>(), Spec);
         }
     }
 }
