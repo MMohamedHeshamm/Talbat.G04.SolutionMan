@@ -10,11 +10,34 @@ namespace Talbat.APIs.Controllers
     public class ProductController : BaseAPIController
     {
 
-        private readonly IGenericRepostiry<Product> _productRepo;
+        private readonly IGenericRepository<Product> _productRepo;
 
-        public ProductController(IGenericRepostiry<Product> productRepo)
+        public ProductController(IGenericRepository<Product> productRepo)
         {
                _productRepo = productRepo;
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult<Product>> GetProducts()
+        {
+
+            var Products = await _productRepo.GetAllAsync();
+
+            return Ok(Products);
+
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetProductsById( int id)
+        {
+             
+            var Products = await _productRepo.GetAsync(id);
+
+            return Ok(Products);
+
+        }
+
     }
 }

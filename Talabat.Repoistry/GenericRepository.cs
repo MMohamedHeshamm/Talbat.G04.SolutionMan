@@ -10,22 +10,31 @@ using System.Threading.Tasks;
 namespace Talabat.Repoistory
 {
 
-    public  class GenericRepo<T> : IGenericRepostiry<T> where T : BaseEntity
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private readonly StoreContext _dbContext;
 
-        public GenericRepo(StoreContext dbContext)
+        public GenericRepository(StoreContext dbContext)
         {
             _dbContext = dbContext;
         }
 
+
+        // normal function to get all data from the database return iEnumerable of T
         public async Task<IEnumerable<T>> GetAllAsync()
         {
+            if (typeof(T) == typeof(Product))
+                return (IEnumerable<T>)await _dbContext.Products.Include(b => b.Brand).Include(c => c.Category).ToListAsync();
             return await _dbContext.Set<T>().ToListAsync();
         }
 
+
+
         public async Task<T?> GetAsync(int id)
         {
+            if (typeof(T) == typeof(Product))
+                return await _dbContext.Products.Where(p => p.Id == id).Include(b => b.Brand).Include(c => c.Category).FirstOrDefaultAsync() as T;
+
             return await _dbContext.Set<T>().FindAsync(id);
         }
     }

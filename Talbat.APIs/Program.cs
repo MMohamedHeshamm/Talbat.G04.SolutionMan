@@ -14,20 +14,24 @@ namespace Talbat.APIs
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            
+
 
             #region Configure Services
-
+            // Add services to the container.
             builder.Services.AddControllers();
+
+            //for swagger documentation
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            //for database connection
             builder.Services.AddDbContext<StoreContext>
                 (options => options.UseSqlServer
                 (builder.Configuration.GetConnectionString("Defo")));
 
 
-            builder.Services.AddScoped(typeof(IGenericRepostiry<>), typeof(GenericRepo<>));
+            //for dependency injection of the generic repository
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             #endregion
 
@@ -49,23 +53,23 @@ namespace Talbat.APIs
 
             var _dbContext = Services.GetRequiredService<StoreContext>();
 
-            var loggerFactory = Services.GetRequiredService<ILoggerFactory>();
+            var loggerFactory = Services.GetRequiredService<ILoggerFactory>(); // for logging the error if any error has been occured during applying the migration
 
             try
             {
-                await _dbContext.Database.MigrateAsync();
-                await StoreContextSeed.SeedAsync(_dbContext);
+                await _dbContext.Database.MigrateAsync();  // for applying the migration to the database
+                await StoreContextSeed.SeedAsync(_dbContext); // for seeding the database with initial data
 
             }
             catch (Exception ex)
             {
                 var logger = loggerFactory.CreateLogger<Program>();
 
-                logger.LogError(ex,"An error has been occured during apply the migration ");
-                
+                logger.LogError(ex, "An error has been occured during apply the migration ");
+
             }
 
-           
+
 
 
 
@@ -94,6 +98,6 @@ namespace Talbat.APIs
 
 
             app.Run();
-            }
+        }
     }
-    }
+}
