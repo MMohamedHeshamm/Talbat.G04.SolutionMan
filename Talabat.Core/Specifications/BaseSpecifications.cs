@@ -17,13 +17,11 @@ namespace Talabat.Core.Specifications
 
         public BaseSpecifications()
         {
-            //Includes = new List<Expression<Func<T, object>>>();
 
         }
 
         public BaseSpecifications(Expression<Func<T, bool>> CriteriaExpression)
         {
-            //Includes = new List<Expression<Func<T, object>>>();
             Criteria = CriteriaExpression;
         }
 

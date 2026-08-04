@@ -41,13 +41,13 @@ namespace Talabat.Repoistory
         }
         #endregion
 
-        public async Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecification<T> Spec)
+        public async Task<IEnumerable<T>> GetAllAsync_Spec(ISpecification<T> Spec)
         {
             return await ApplySpecification(Spec).ToListAsync();
         }
 
 
-        public async Task<T> GetByIdWithSpecAsync(int id, ISpecification<T> Spec)
+        public async Task<T> GetByIdAsync_Spec(int id, ISpecification<T> Spec)
         {
             return await ApplySpecification(Spec).FirstOrDefaultAsync();
         }
