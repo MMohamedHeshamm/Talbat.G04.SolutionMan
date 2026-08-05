@@ -17,7 +17,7 @@ namespace Talabat.Core.Repoisitories.Contract
 
         #region With Specification
 
-        Task<T> GetByIdAsync_Spec(int id, ISpecification<T> Spec); 
+        Task<T> GetByIdAsync_Spec( ISpecification<T> Spec); 
 
         Task<IEnumerable<T>> GetAllAsync_Spec(ISpecification<T> Spec);
 

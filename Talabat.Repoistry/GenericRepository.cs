@@ -47,7 +47,7 @@ namespace Talabat.Repoistory
         }
 
 
-        public async Task<T> GetByIdAsync_Spec(int id, ISpecification<T> Spec)
+        public async Task<T> GetByIdAsync_Spec( ISpecification<T> Spec)
         {
             return await ApplySpecification(Spec).FirstOrDefaultAsync();
         }
