@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Talabat.Core.Repoisitories.Contract;
 using Talabat.Repoistory;
 using Talabat.Repoistory.Data;
+using Talbat.APIs.Helpers;
 
 namespace Talbat.APIs
 {
@@ -32,6 +33,9 @@ namespace Talbat.APIs
 
             //for dependency injection of the generic repository
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            //builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly); // for automapper configuration
+            builder.Services.AddAutoMapper(typeof(MappingProfiles)); // for automapper configuration
+           
 
             #endregion
 

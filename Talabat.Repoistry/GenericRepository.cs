@@ -23,7 +23,7 @@ namespace Talabat.Repoistory
 
         // normal function to get all data from the database return iEnumerable of T
         #region WithOut Spec
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAll_Async()
         {
             if (typeof(T) == typeof(Product))
                 return (IEnumerable<T>)await _dbContext.Products.Include(b => b.Brand).Include(c => c.Category).ToListAsync();
@@ -32,7 +32,7 @@ namespace Talabat.Repoistory
 
 
 
-        public async Task<T?> GetAsync(int id)
+        public async Task<T?> GetById_Async(int id)
         {
             if (typeof(T) == typeof(Product))
                 return await _dbContext.Products.Where(p => p.Id == id).Include(b => b.Brand).Include(c => c.Category).FirstOrDefaultAsync() as T;
@@ -41,21 +41,27 @@ namespace Talabat.Repoistory
         }
         #endregion
 
-        public async Task<IEnumerable<T>> GetAllAsync_Spec(ISpecification<T> Spec)
+        #region With Specification
+        private IQueryable<T> ApplySpecification(ISpecification<T> Spec)
+        {
+            // هنا هو اخد الجزء الثابت من الكويري وطبق عليه ال Specification اللي جايه من بره
+
+
+            return SpecificationEvalutor<T>.GetQuery(_dbContext.Set<T>(), Spec);
+        }
+
+        public async Task<IEnumerable<T>> GetAll_Async_Spec(ISpecification<T> Spec)
         {
             return await ApplySpecification(Spec).ToListAsync();
         }
 
 
-        public async Task<T> GetByIdAsync_Spec( ISpecification<T> Spec)
+        public async Task<T> GetById_Async_Spec(ISpecification<T> Spec)
         {
             return await ApplySpecification(Spec).FirstOrDefaultAsync();
         }
 
 
-        private IQueryable<T> ApplySpecification(ISpecification<T> Spec)
-        {
-            return SpecificationEvalutor<T>.GetQuery(_dbContext.Set<T>(), Spec);
-        }
+        #endregion
     }
 }
