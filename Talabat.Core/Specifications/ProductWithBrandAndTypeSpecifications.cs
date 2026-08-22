@@ -7,7 +7,8 @@ namespace Talabat.Core.Specifications
 {
     public class ProductWithBrandAndTypeSpecifications : BaseSpecifications<Product>
     {
-        // ctor for get all product 
+        // ** get all product  **
+        //When get all product we want to include the brand and category of product 
         public ProductWithBrandAndTypeSpecifications() : base()
         {
 
@@ -15,6 +16,9 @@ namespace Talabat.Core.Specifications
             Includes.Add(p => p.Category);
 
         }
+
+        //** Get by id specification **
+        //when get product by id we want to include the brand and category of product
         public ProductWithBrandAndTypeSpecifications(int id) : base(p => p.Id == id)
         {
             Includes.Add(p => p.Brand);

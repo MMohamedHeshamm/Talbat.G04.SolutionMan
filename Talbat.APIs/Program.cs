@@ -5,7 +5,9 @@ using Microsoft.Extensions.Options;
 using Talabat.Core.Repoisitories.Contract;
 using Talabat.Repoistory;
 using Talabat.Repoistory.Data;
+using Talbat.APIs.Errors;
 using Talbat.APIs.Helpers;
+using Talbat.APIs.Middlewares;
 
 namespace Talbat.APIs
 {
@@ -33,9 +35,29 @@ namespace Talbat.APIs
 
             //for dependency injection of the generic repository
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            //builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly); // for automapper configuration
-            builder.Services.AddAutoMapper(typeof(MappingProfiles)); // for automapper configuration
-           
+
+
+            // for automapper configuration
+            builder.Services.AddAutoMapper(typeof(MappingProfiles)); 
+
+
+            // for validaion error Responce Handlling
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+                    var errors = actionContext.ModelState
+                        .Where(p => p.Value.Errors.Count() > 0)
+                        .SelectMany(x => x.Value.Errors)
+                        .Select(x => x.ErrorMessage).ToArray();
+                    var ValidationErrorResponse = new ApiValidationErrorResponce
+                    {
+                        Errors = errors
+                    };
+                    return new BadRequestObjectResult(ValidationErrorResponse);
+                };
+            });
+
 
             #endregion
 
@@ -48,7 +70,7 @@ namespace Talbat.APIs
             var app = builder.Build();
 
 
-
+            //for applying the migration and seeding the database with initial data
             #region Update Database
 
             using var scope = app.Services.CreateScope();
@@ -65,6 +87,7 @@ namespace Talbat.APIs
                 await StoreContextSeed.SeedAsync(_dbContext); // for seeding the database with initial data
 
             }
+            //for logging the error if any error has been occured during applying the migration
             catch (Exception ex)
             {
                 var logger = loggerFactory.CreateLogger<Program>();
@@ -86,14 +109,21 @@ namespace Talbat.APIs
 
             if (app.Environment.IsDevelopment())
             {
+                //for handling server errors and returning the error response to the client
+                app.UseMiddleware<ExceptionMiddleWare>();
+
+                //for swagger documentation
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+
             }
 
+            app.UseStaticFiles(); // for wwwroot folder to be accessible from the browser
 
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
+            app.UseHttpsRedirection(); // for redirecting the http request to https request
+            app.UseAuthorization();   // for authorization of the request
+            app.MapControllers();    // for mapping the controllers to the request
 
             #endregion
 
@@ -101,7 +131,7 @@ namespace Talbat.APIs
 
 
 
-            app.Run();
+            app.Run(); // for running the application
         }
     }
 }

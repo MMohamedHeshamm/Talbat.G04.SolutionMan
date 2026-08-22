@@ -5,6 +5,7 @@ using Talabat.Core.Entites;
 using Talabat.Core.Repoisitories.Contract;
 using Talabat.Core.Specifications;
 using Talbat.APIs.DTOs;
+using Talbat.APIs.Errors;
 
 namespace Talbat.APIs.Controllers
 {
@@ -16,7 +17,7 @@ namespace Talbat.APIs.Controllers
         private readonly IGenericRepository<Product> _productRepo;
         private readonly IMapper _mapper;
 
-        public ProductController(IGenericRepository<Product> productRepo , IMapper mapper)
+        public ProductController(IGenericRepository<Product> productRepo, IMapper mapper)
         {
             _productRepo = productRepo;
             _mapper = mapper;
@@ -38,12 +39,16 @@ namespace Talbat.APIs.Controllers
         }
 
 
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductsById(int id)
         {
             var Spec = new ProductWithBrandAndTypeSpecifications(id);
 
             var Products = await _productRepo.GetById_Async_Spec(Spec);
+
+            if (Products is null)  return NotFound(new APiResponse(404)); 
 
             var mappedProducts = _mapper.Map<Product, ProductToReturnDto>(Products);
 
