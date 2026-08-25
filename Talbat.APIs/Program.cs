@@ -6,6 +6,7 @@ using Talabat.Core.Repoisitories.Contract;
 using Talabat.Repoistory;
 using Talabat.Repoistory.Data;
 using Talbat.APIs.Errors;
+using Talbat.APIs.Extensions;
 using Talbat.APIs.Helpers;
 using Talbat.APIs.Middlewares;
 
@@ -23,9 +24,8 @@ namespace Talbat.APIs
             // Add services to the container.
             builder.Services.AddControllers();
 
-            //for swagger documentation
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            // for swagger documentation by extension method to add the services to the container
+            builder.Services.AddSwaggerServices();
 
             //for database connection
             builder.Services.AddDbContext<StoreContext>
@@ -33,30 +33,10 @@ namespace Talbat.APIs
                 (builder.Configuration.GetConnectionString("Defo")));
 
 
-            //for dependency injection of the generic repository
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            // for extension method to add the services to the container
+            builder.Services.AddApplicationServices();
 
 
-            // for automapper configuration
-            builder.Services.AddAutoMapper(typeof(MappingProfiles)); 
-
-
-            // for validaion error Responce Handlling
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = (actionContext) =>
-                {
-                    var errors = actionContext.ModelState
-                        .Where(p => p.Value.Errors.Count() > 0)
-                        .SelectMany(x => x.Value.Errors)
-                        .Select(x => x.ErrorMessage).ToArray();
-                    var ValidationErrorResponse = new ApiValidationErrorResponce
-                    {
-                        Errors = errors
-                    };
-                    return new BadRequestObjectResult(ValidationErrorResponse);
-                };
-            });
 
 
             #endregion
@@ -113,11 +93,15 @@ namespace Talbat.APIs
                 app.UseMiddleware<ExceptionMiddleWare>();
 
                 //for swagger documentation
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddlewares();
 
 
             }
+
+            // for handling the status code pages and redirecting to the error controller ( not found controller )
+            //app.UseStatusCodePagesWithRedirects("/errors/{0}"); 
+            app.UseStatusCodePagesWithReExecute("/errors/{0}"); 
+
 
             app.UseStaticFiles(); // for wwwroot folder to be accessible from the browser
 

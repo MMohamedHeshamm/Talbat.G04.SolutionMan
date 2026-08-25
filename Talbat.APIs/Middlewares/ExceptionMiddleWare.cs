@@ -31,38 +31,41 @@ namespace Talbat.APIs.Middlewares
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                 #region MyRegion
-                // for simplicity, we can use the following code to return the error response based on the environment
+                // for simplicity, we can use the following code to return the error Response based on the environment
 
                 //if(_env.IsDevelopment())
                 //{
-                //    var response = new Errors.ApiExceptionResponse(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString());
-                //    await context.Response.WriteAsJsonAsync(response);
+                //    var Response = new Errors.ApiExceptionResponse(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString());
+                //    await context.Response.WriteAsJsonAsync(Response);
                 //}
                 //else
                 //{
-                //    var response = new Errors.ApiExceptionResponse(context.Response.StatusCode, "Internal Server Error");
-                //    await context.Response.WriteAsJsonAsync(response);
+                //    var Response = new Errors.ApiExceptionResponse(context.Response.StatusCode, "Internal Server Error");
+                //    await context.Response.WriteAsJsonAsync(Response);
                 //}
 
                 #endregion
 
 
                 // same but more elegant way using ternary operator
-                var response = _env.IsDevelopment()
+                var Response = _env.IsDevelopment()
                     ? new Errors.ApiExceptionResponse(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString())
                     : new Errors.ApiExceptionResponse(context.Response.StatusCode, "Internal Server Error");
 
                 //for json file can use the following code
-                //to serialize the response object to json format and write it to the response body
+                //to serialize the Response object to json format and write it to the Response body
                 var Options = new JsonSerializerOptions()
                 {
 
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 };
-
-                var JsonResponse = JsonSerializer.Serialize(response, Options);
-
+                var JsonResponse = JsonSerializer.Serialize(Response, Options);
                 context.Response.WriteAsync(JsonResponse);
+
+               
+
+
+                
             }
         }
 

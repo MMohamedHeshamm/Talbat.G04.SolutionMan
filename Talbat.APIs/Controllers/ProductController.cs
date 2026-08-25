@@ -42,7 +42,7 @@ namespace Talbat.APIs.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProductsById(int id)
+        public async Task<ActionResult<Product>> GetProductById(int id)
         {
             var Spec = new ProductWithBrandAndTypeSpecifications(id);
 
