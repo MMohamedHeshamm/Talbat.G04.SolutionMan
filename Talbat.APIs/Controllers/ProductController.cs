@@ -16,16 +16,22 @@ namespace Talbat.APIs.Controllers
 
         private readonly IGenericRepository<Product> _productRepo;
         private readonly IMapper _mapper;
+        private readonly IGenericRepository<ProductCategory> _productCategoryRepo;
+        private readonly IGenericRepository<ProductBrand> _productBrandRepo;
 
-        public ProductController(IGenericRepository<Product> productRepo, IMapper mapper)
+
+        public ProductController(IGenericRepository<Product> productRepo,
+            IMapper mapper , IGenericRepository<ProductCategory> ProductCategoryRepo, IGenericRepository<ProductBrand> ProductBrands)
         {
             _productRepo = productRepo;
             _mapper = mapper;
+            _productCategoryRepo = ProductCategoryRepo;
+            _productBrandRepo = ProductBrands;
         }
 
 
         [HttpGet]
-        public async Task<ActionResult<Product>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts()
         {
 
             var Spec = new ProductWithBrandAndTypeSpecifications();
@@ -54,6 +60,27 @@ namespace Talbat.APIs.Controllers
 
             return Ok(mappedProducts);
 
+        }
+
+
+
+        //Get All Product Categories
+        [HttpGet("Categories")]
+        public async Task<ActionResult<IReadOnlyList<ProductCategory>>> GetProductCategories()
+        {
+
+            var Categories = await _productCategoryRepo.GetAll_Async();
+            return Ok(Categories);
+
+        }
+
+        //get all brands
+        [HttpGet("Brands")]
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductBrands()
+        {
+
+            var Brands = await _productBrandRepo.GetAll_Async();
+            return Ok(Brands);
         }
 
     }

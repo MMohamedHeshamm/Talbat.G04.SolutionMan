@@ -27,10 +27,11 @@ namespace Talbat.APIs.Middlewares
             {
                 _logger.LogError(ex, ex.Message);
 
+
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                #region MyRegion
+                #region try
                 // for simplicity, we can use the following code to return the error Response based on the environment
 
                 //if(_env.IsDevelopment())

@@ -23,10 +23,10 @@ namespace Talabat.Repoistory
 
         // normal function to get all data from the database return iEnumerable of T
         #region WithOut Spec
-        public async Task<IEnumerable<T>> GetAll_Async()
+        public async Task<IReadOnlyList<T>> GetAll_Async()
         {
             if (typeof(T) == typeof(Product))
-                return (IEnumerable<T>)await _dbContext.Products.Include(b => b.Brand).Include(c => c.Category).ToListAsync();
+                return (IReadOnlyList<T>)await _dbContext.Products.Include(b => b.Brand).Include(c => c.Category).ToListAsync();
             return await _dbContext.Set<T>().ToListAsync();
         }
 
@@ -50,7 +50,7 @@ namespace Talabat.Repoistory
             return SpecificationEvalutor<T>.GetQuery(_dbContext.Set<T>(), Spec);
         }
 
-        public async Task<IEnumerable<T>> GetAll_Async_Spec(ISpecification<T> Spec)
+        public async Task<IReadOnlyList<T>> GetAll_Async_Spec(ISpecification<T> Spec)
         {
             return await ApplySpecification(Spec).ToListAsync();
         }

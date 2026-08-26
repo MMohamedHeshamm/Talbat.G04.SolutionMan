@@ -9,7 +9,7 @@ namespace Talabat.Core.Repoisitories.Contract
     public interface IGenericRepository<T> where T : BaseEntity
     {
         #region WithoutSpecification
-        Task<IEnumerable<T>> GetAll_Async();
+        Task<IReadOnlyList<T>> GetAll_Async();
         Task<T> GetById_Async(int id);
 
         #endregion
@@ -18,7 +18,7 @@ namespace Talabat.Core.Repoisitories.Contract
         #region With Specification
 
 
-        Task<IEnumerable<T>> GetAll_Async_Spec(ISpecification<T> Spec);
+        Task<IReadOnlyList<T>> GetAll_Async_Spec(ISpecification<T> Spec);
         Task<T> GetById_Async_Spec( ISpecification<T> Spec); 
 
 
