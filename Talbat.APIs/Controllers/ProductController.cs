@@ -31,10 +31,10 @@ namespace Talbat.APIs.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string sort)
         {
 
-            var Spec = new ProductWithBrandAndTypeSpecifications();
+            var Spec = new ProductWithBrandAndTypeSpecifications(sort);
 
             var Products = await _productRepo.GetAll_Async_Spec(Spec);
 

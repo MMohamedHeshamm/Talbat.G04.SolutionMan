@@ -9,7 +9,7 @@ namespace Talabat.Core.Specifications
     {
         // ** get all product  **
         //When get all product we want to include the brand and category of product 
-        public ProductWithBrandAndTypeSpecifications() : base()
+        public ProductWithBrandAndTypeSpecifications( string sort) : base()
         {
 
             Includes.Add(p => p.Brand);
